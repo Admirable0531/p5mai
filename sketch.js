@@ -3,7 +3,9 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(400, 600);
+  background(50);
+  rect(0,500,400,600)
   background(220);
   circle(200,200,250);
   stroke("purple");
@@ -29,13 +31,38 @@ function draw()
 
 function parse()
 {
+  let diffArray = [];
+  let collectingData = false;
+  timeline = [];
   for(line in myData){
     curLine = myData[line];
-    console.log(curLine)
+    // console.log(curLine)
     if(curLine.startsWith("&title=")){
-      console.log("yes")
       const title = curLine.split('&title=');
       text(title[1], 10, 50, 90);
     }
+    if (collectingData) {
+      if (curLine.startsWith("E")) {
+        collectingData = false;
+        diffArray.push(curLine);
+        break;
+      }
+      diffArray.push(curLine);
+    } else if (curLine.startsWith("&inote_5=")) {
+      collectingData = true;
+      diffArray.push(curLine);
+    }
   }
+  
+  printDiff(diffArray);
+}
+
+function printDiff(diffArray){
+  for(line in diffArray){
+    console.log(diffArray[line]);
+  }
+}
+
+function parseBeatDivisor() {
+
 }
